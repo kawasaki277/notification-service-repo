@@ -1,0 +1,3 @@
+package com.clinicbooking.notification.infrastructure.out.sms;
+import org.springframework.http.client.JdkClientHttpRequestFactory; import org.springframework.web.client.RestClient; import java.net.http.HttpClient; import java.time.Duration;
+final class RestClientsFactory { private RestClientsFactory(){} static RestClient create(RestClient.Builder builder,String base,String key,long connect,long read){HttpClient http=HttpClient.newBuilder().connectTimeout(Duration.ofMillis(connect)).build();JdkClientHttpRequestFactory f=new JdkClientHttpRequestFactory(http);f.setReadTimeout(Duration.ofMillis(read));RestClient.Builder b=builder.baseUrl(base).requestFactory(f);if(key!=null&&!key.isBlank())b.defaultHeader("x-api-key",key);return b.build();} }

@@ -1,0 +1,40 @@
+server:
+  port: ${PORT:8083}
+
+spring:
+  application:
+    name: notification-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://ep-frosty-paper-bb4zuk5w.c-15.us-east-1.aws.neon.tech:5432/neondb?sslmode=require&currentSchema=schema_notificaciones}
+    username: ${SPRING_DATASOURCE_USERNAME:neondb_owner}
+    password: ${SPRING_DATASOURCE_PASSWORD:npg_9xhmaSHRg5jv}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 4
+      minimum-idle: 1
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        # Crea el schema en Neon si aun no existe (sin esto: ERROR: schema "..." does not exist)
+        hbm2ddl:
+          create_namespaces: true
+        default_schema: schema_notificaciones
+
+notification:
+  http:
+    connect-timeout-ms: 3000
+    read-timeout-ms: 5000
+  email:
+    # el adaptador ya antepone /v3/smtp/email (antes quedaba /v3/v3/smtp/email)
+    base-url: https://api.brevo.com
+    api-key: ${BREVO_API_KEY:}
+    from-email: ${MAIL_FROM_EMAIL:${BREVO_SENDER_EMAIL:citas@clinicbooking.local}}
+    from-name: ${MAIL_FROM_NAME:${BREVO_SENDER_NAME:ClinicBooking}}
+  sms:
+    base-url: https://api.textbee.dev/api/v1
+    api-key: ${TEXTBEE_API_KEY:txb_7xREWCETtKlKIsYLqzNZfFqnFDrqWRfl}
+    device-id: ${TEXTBEE_DEVICE_ID:6aeea0293574bcbcd15c8913}
+    internal-key: ${NOTIFICATION_INTERNAL_KEY:}
